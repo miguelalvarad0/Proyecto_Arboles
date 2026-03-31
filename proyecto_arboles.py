@@ -1,5 +1,6 @@
 import os 
 import time
+import tkinter as tk
 
 def arbol (centro, hijoizquierdo, hijoderecho):
     if hijoizquierdo == [] and hijoderecho == []:
@@ -156,6 +157,34 @@ def eliminar_hoja(ele, a):
         eliminar_hoja(ele, hijoder(a))
     )
 
+def raiz_v2(a):
+    return a if not isinstance(a, list) else a[0]
+
+def izq(a):
+    return [] if not isinstance(a, list) else a[1]
+
+def der(a):
+    return [] if not isinstance(a, list) else a[2]
+
+def dibujar(canvas, a, x, y, dx):
+    if a == []:
+        return
+    
+    # nodo
+    canvas.create_oval(x-15, y-15, x+15, y+15)
+    canvas.create_text(x, y, text=str(raiz_v2(a)))
+    
+    # hijo izquierdo
+    if izq(a) != []:
+        canvas.create_line(x, y, x-dx, y+60)
+        dibujar(canvas, izq(a), x-dx, y+60, dx//2)
+    
+    # hijo derecho
+    if der(a) != []:
+        canvas.create_line(x, y, x+dx, y+60)
+        dibujar(canvas, der(a), x+dx, y+60, dx//2)
+
+
 def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("            ARBOL")
     print("Digite 1 para Crear Raiz")
@@ -170,8 +199,8 @@ def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("Digite 10 para Conocer la Cantidad de Hojas") 
     print("Digite 11 para Conocer la altura del arbol")  
     print("Digite 12 para Eliminar una Hoja")
-    print("Digite 13 para salir del programa\n")
-
+    print("Digite 13 para Ver el Arbol")
+    print("Digite 14 para salir del programa\n")
 def main(arbol1): 
     imprimir_menu()
     select = int(input(" "))
@@ -287,6 +316,20 @@ def main(arbol1):
         ele = input("Ingrese la hoja que desea eliminar:")
         arbol1 = eliminar_hoja(ele, arbol1)
         print(arbol1)
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 13:
+        os.system('clear')
+        print("\nMostrar Arbol")
+        ventana = tk.Tk()
+        canvas = tk.Canvas(ventana, width=600, height=400)
+        canvas.pack()
+        dibujar(canvas, arbol1, 300, 40, 120)
+        ventana.after(4000, ventana.destroy)
+        ventana.mainloop()
         input("\nPresiona Enter para continuar...")
         #time.sleep(2.5)
         os.system('clear')
