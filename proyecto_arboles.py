@@ -47,29 +47,91 @@ def crear_raiz (centro):
     return centro
     
 
-def insertar (ele, arb):
-    #print (ele, arb)
-    if arb == []:
-        return ele
-    elif ele <= raiz(arb):
-        return arbol(raiz(arb), insertar(ele, hijoizq(arb)),
-                      hijoder(arb))
-    else:
-        return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
+# def insertar (ele, arb):
+#     #print (ele, arb)
+#     if arb == []:
+#         return ele
+#     elif ele <= raiz(arb):
+#         return arbol(raiz(arb), insertar(ele, hijoizq(arb)),
+#                       hijoder(arb))
+#     else:
+#         return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
 
-def insertar_hijo_izq (ele, arb):
-    #print (ele, arb)
-    if arb == []:
-        return ele
-    else:
-        return arbol(raiz(arb), insertar(ele, hijoizq(arb)),hijoder(arb))
+# def insertar_hijo_izq (ele, arb):
+#     #print (ele, arb)
+#     if arb == []:
+#         return ele
+#     else:
+#         return arbol(raiz(arb), insertar(ele, hijoizq(arb)),hijoder(arb))
 
-def insertar_hijo_der (ele, arb):
-    #print (ele, arb)
-    if arb == []:
-        return ele   
-    else:
-        return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
+# def insertar_hijo_der (ele, arb):
+#     #print (ele, arb)
+#     if arb == []:
+#         return ele   
+#     else:
+#         return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
+
+def insertar_izq_en_nodo(a, objetivo, nuevo):
+    nuevo_arbol, estado = insertar_izq_en_nodo_aux(a, objetivo, nuevo)
+    
+    if estado == "no_encontrado":
+        print("Nodo no encontrado")
+    elif estado == "ocupado":
+        print("El nodo", objetivo, "ya tiene hijo izquierdo ocupado")
+    
+    return nuevo_arbol
+
+def insertar_izq_en_nodo_aux(a, objetivo, nuevo):
+    if a == []:
+        return [], "no_encontrado"
+    
+    if raiz(a) == objetivo:
+        if hijoizq(a) == []:
+            return arbol(raiz(a), [nuevo, [], []], hijoder(a)), "insertado"
+        else:
+            return a, "ocupado"
+    
+    # Buscar izquierda
+    nuevo_izq, estado = insertar_izq_en_nodo_aux(hijoizq(a), objetivo, nuevo)
+    
+    if estado != "no_encontrado":
+        return arbol(raiz(a), nuevo_izq, hijoder(a)), estado
+    
+    # Buscar derecha
+    nuevo_der, estado = insertar_izq_en_nodo_aux(hijoder(a), objetivo, nuevo)
+    
+    return arbol(raiz(a), hijoizq(a), nuevo_der), estado
+
+def insertar_der_en_nodo(a, objetivo, nuevo):
+    nuevo_arbol, estado = insertar_der_en_nodo_aux(a, objetivo, nuevo)
+    
+    if estado == "no_encontrado":
+        print("Nodo no encontrado")
+    elif estado == "ocupado":
+        print("El nodo", objetivo, "ya tiene hijo derecho ocupado")
+    
+    return nuevo_arbol
+
+def insertar_der_en_nodo_aux(a, objetivo, nuevo):
+    if a == []:
+        return [], "no_encontrado"
+    
+    if raiz(a) == objetivo:
+        if hijoder(a) == []:
+            return arbol(raiz(a), hijoizq(a), [nuevo, [], []]), "insertado"
+        else:
+            return a, "ocupado"
+    
+    # Buscar izquierda
+    nuevo_izq, estado = insertar_der_en_nodo_aux(hijoizq(a), objetivo, nuevo)
+    
+    if estado != "no_encontrado":
+        return arbol(raiz(a), nuevo_izq, hijoder(a)), estado
+    
+    # Buscar derecha
+    nuevo_der, estado = insertar_der_en_nodo_aux(hijoder(a), objetivo, nuevo)
+    
+    return arbol(raiz(a), hijoizq(a), nuevo_der), estado
 
 def buscar_ab(elemento, arb):
     if arb == []:
@@ -218,8 +280,9 @@ def main(arbol1):
     elif select == 2:
         os.system('clear')
         print("\nInsertar Hijo Izquierdo")
+        nodo = input("A cual nodo quiere agregar un hijo:")
         hijo = input("Ingrese el hijo:")
-        arbol1 = insertar_hijo_izq(hijo,arbol1)
+        arbol1 = insertar_izq_en_nodo(arbol1,nodo,hijo)
         print(arbol1)
         input("Presiona Enter para continuar...")
         #time.sleep(2.5)
@@ -229,8 +292,9 @@ def main(arbol1):
     elif select == 3:
         os.system('clear')
         print("\nInsertar Hijo Derecho")
+        nodo = input("A cual nodo quiere agregar un hijo:")
         hijo = input("Ingrese el hijo:")
-        arbol1 = insertar_hijo_der(hijo,arbol1)
+        arbol1 = insertar_der_en_nodo(arbol1,nodo,hijo)
         print(arbol1)
         input("Presiona Enter para continuar...")
         #time.sleep(2.5)
