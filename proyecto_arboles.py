@@ -10,18 +10,15 @@ def arbol (centro, hijoizquierdo, hijoderecho):
     else:
         return [centro] + [hijoizquierdo] + [hijoderecho]
 
-
 def atomo(x):
    
     return not type(x) == list
-
 
 def raiz (arbol):
     if atomo(arbol):
         return arbol
     else:
         return arbol[0]
-
 
 def hijoizq (arbol):
     if atomo(arbol):
@@ -48,31 +45,6 @@ def hoja(nodo):
 def crear_raiz (centro):   
     return centro
     
-
-# def insertar (ele, arb):
-#     #print (ele, arb)
-#     if arb == []:
-#         return ele
-#     elif ele <= raiz(arb):
-#         return arbol(raiz(arb), insertar(ele, hijoizq(arb)),
-#                       hijoder(arb))
-#     else:
-#         return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
-
-# def insertar_hijo_izq (ele, arb):
-#     #print (ele, arb)
-#     if arb == []:
-#         return ele
-#     else:
-#         return arbol(raiz(arb), insertar(ele, hijoizq(arb)),hijoder(arb))
-
-# def insertar_hijo_der (ele, arb):
-#     #print (ele, arb)
-#     if arb == []:
-#         return ele   
-#     else:
-#         return arbol (raiz(arb), hijoizq(arb), insertar(ele,hijoder(arb)))
-
 def insertar_izq_en_nodo(a, objetivo, nuevo):
     nuevo_arbol, estado = insertar_izq_en_nodo_aux(a, objetivo, nuevo)
     
@@ -257,6 +229,59 @@ def cargar_archivo(file_path):
     with open(file_path, 'r') as archivo:
         return json.load(archivo)
 
+def buscar_nodo(a, objetivo):
+    if a == []:
+        return []
+    
+    if raiz(a) == objetivo:
+        return a
+    
+    # buscar en izquierda
+    res = buscar_nodo(hijoizq(a), objetivo)
+    if res != []:
+        return res
+    
+    # buscar en derecha
+    return buscar_nodo(hijoder(a), objetivo)
+
+def mostrar_hijos(a, objetivo):
+    nodo = buscar_nodo(a, objetivo)
+    
+    if nodo == []:
+        print("Nodo no encontrado")
+        return
+    
+    izq = hijoizq(nodo)
+    der = hijoder(nodo)
+    
+    print("Hijo izquierdo:", raiz(izq) if izq != [] else "None")
+    print("Hijo derecho:", raiz(der) if der != [] else "None")
+
+def buscar_padre(a, objetivo):
+    if a == []:
+        return None
+    
+    # Verificar si este nodo es el padre
+    if (hijoizq(a) != [] and raiz(hijoizq(a)) == objetivo) or \
+       (hijoder(a) != [] and raiz(hijoder(a)) == objetivo):
+        return a
+    
+    # Buscar en subárbol izquierdo
+    res = buscar_padre(hijoizq(a), objetivo)
+    if res is not None:
+        return res
+    
+    # Buscar en subárbol derecho
+    return buscar_padre(hijoder(a), objetivo)
+
+def mostrar_padre(a, objetivo):
+    padre = buscar_padre(a, objetivo)
+    
+    if padre is None:
+        print("No tiene padre (puede ser la raíz o no existe)")
+    else:
+        print("Padre:", raiz(padre))
+
 def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("            ARBOL")
     print("Digite 1 para Crear Raiz")
@@ -274,7 +299,12 @@ def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("Digite 13 para Ver el Arbol")
     print("Digite 14 para Guardar el Progreso")
     print("Digite 15 para Cargar el Arbol Guardado en Memoria") 
-    print("Digite 16 para salir del programa\n")
+    print("Digite 16 para Mostrar una Generacion") 
+    print("Digite 17 para Mostrar Hijos de una Persona") 
+    print("Digite 18 para Mostrar el Padre de una Persona") 
+    print("Digite 19 para Mostrar el Abuelo de una Persona") 
+    print("Digite 20 para salir del programa\n")
+
 def main(arbol1): 
     imprimir_menu()
     select = int(input(" "))
@@ -429,17 +459,38 @@ def main(arbol1):
         os.system('clear')
         main(arbol1)
 
+    elif select == 16:       
+        os.system('clear')
+        print("\nMostrar una Generacion")
+        gen = input("Ingrese el numero de generacion que desea mostrar:")
+        imprimir_nivel(arbol1,int(gen))
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 17:       
+        os.system('clear')
+        print("\nMostrar Hijos")
+        objetivo = input("Mostrar hijos de:")
+        mostrar_hijos(arbol1,objetivo)
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 18:       
+        os.system('clear')
+        print("\nMostrar Padre")
+        objetivo = input("Mostrar Padre de:")
+        mostrar_padre(arbol1,objetivo)
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
     else:
         return""   #fin del programa
 
 arbol1 = []
 main(arbol1)
-
-# a = arbol(8,4,[12,9,15])
-# a = insertar(2,a)
-# a = insertar(10,a)
-# b = crear_raiz(50)
-# b = insertar(2,b)
-# b = insertar(60,b)
-# b = insertar(62,b)
-# print (b) 
