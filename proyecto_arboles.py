@@ -1,6 +1,8 @@
 import os 
 import time
 import tkinter as tk
+import json
+
 
 def arbol (centro, hijoizquierdo, hijoderecho):
     if hijoizquierdo == [] and hijoderecho == []:
@@ -246,6 +248,14 @@ def dibujar(canvas, a, x, y, dx):
         canvas.create_line(x, y, x+dx, y+60)
         dibujar(canvas, der(a), x+dx, y+60, dx//2)
 
+def guardar_archivo(file_path, arbol):
+    with open(file_path, 'w') as archivo:
+        json.dump(arbol, archivo)
+
+def cargar_archivo(file_path):
+    import json
+    with open(file_path, 'r') as archivo:
+        return json.load(archivo)
 
 def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("            ARBOL")
@@ -262,7 +272,9 @@ def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("Digite 11 para Conocer la altura del arbol")  
     print("Digite 12 para Eliminar una Hoja")
     print("Digite 13 para Ver el Arbol")
-    print("Digite 14 para salir del programa\n")
+    print("Digite 14 para Guardar el Progreso")
+    print("Digite 15 para Cargar el Arbol Guardado en Memoria") 
+    print("Digite 16 para salir del programa\n")
 def main(arbol1): 
     imprimir_menu()
     select = int(input(" "))
@@ -394,6 +406,24 @@ def main(arbol1):
         dibujar(canvas, arbol1, 300, 40, 120)
         ventana.after(4000, ventana.destroy)
         ventana.mainloop()
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 14:
+        guardar_archivo("Arbol_Genealogico.txt",arbol1)
+        os.system('clear')
+        print("\nProgreso Guardado")
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+    
+    elif select == 15:
+        arbol1 = cargar_archivo("Arbol_Genealogico.txt")
+        os.system('clear')
+        print("\nArchivo en Memoria Recuperado!")
         input("\nPresiona Enter para continuar...")
         #time.sleep(2.5)
         os.system('clear')
