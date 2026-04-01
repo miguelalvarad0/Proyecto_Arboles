@@ -278,9 +278,29 @@ def mostrar_padre(a, objetivo):
     padre = buscar_padre(a, objetivo)
     
     if padre is None:
-        print("No tiene padre (puede ser la raíz o no existe)")
+        return 0
     else:
-        print("Padre:", raiz(padre))
+        return raiz(padre)
+        
+def mayor_ab(arb):
+    if arb == []:
+        return float('-inf')
+    
+    return max(
+        int(raiz(arb)),
+        mayor_ab(hijoizq(arb)),
+        mayor_ab(hijoder(arb))
+    )
+
+def menor_ab(arb):
+    if arb == []:
+        return float('+inf')
+    
+    return min(
+        int(raiz(arb)),
+        menor_ab(hijoizq(arb)),
+        menor_ab(hijoder(arb))
+    )
 
 def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("            ARBOL")
@@ -303,7 +323,9 @@ def imprimir_menu(): #Imprime menu de opciones en pantalla.
     print("Digite 17 para Mostrar Hijos de una Persona") 
     print("Digite 18 para Mostrar el Padre de una Persona") 
     print("Digite 19 para Mostrar el Abuelo de una Persona") 
-    print("Digite 20 para salir del programa\n")
+    print("Digite 20 para Mostrar el Mayor Nodo") 
+    print("Digite 21 para Mostrar el Menor Nodo") 
+    print("Digite 22 para salir del programa\n")
 
 def main(arbol1): 
     imprimir_menu()
@@ -483,7 +505,53 @@ def main(arbol1):
         os.system('clear')
         print("\nMostrar Padre")
         objetivo = input("Mostrar Padre de:")
-        mostrar_padre(arbol1,objetivo)
+        x = mostrar_padre(arbol1,objetivo)
+        if x == 0:
+            print("No tiene padre (puede ser la raíz o no existe)")
+        else:
+            print("Padre:", x)
+
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 19:       
+        os.system('clear')
+        print("\nMostrar Abuelo")
+        objetivo = input("Mostrar Abuelo de:")
+        x = mostrar_padre(arbol1,mostrar_padre(arbol1,objetivo))
+        if x == 0:
+            print("No tiene abuelo o la persona no existe")
+        else:
+            print("Abuelo:", x)
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 20:       
+        os.system('clear')
+        print("\nMostrar Nodo Mayor")
+        x = mayor_ab(arbol1)
+        if x < -1000000000000 :
+            print("Arbol vacio.")
+        else:
+            print(x)
+
+        input("\nPresiona Enter para continuar...")
+        #time.sleep(2.5)
+        os.system('clear')
+        main(arbol1)
+
+    elif select == 21:       
+        os.system('clear')
+        print("\nMostrar Nodo Menor")
+        x = menor_ab(arbol1)
+        if x > 1000000000000 :
+            print("Arbol vacio.")
+        else:
+            print(x)
         input("\nPresiona Enter para continuar...")
         #time.sleep(2.5)
         os.system('clear')
